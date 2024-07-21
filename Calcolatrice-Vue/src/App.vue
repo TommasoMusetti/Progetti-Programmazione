@@ -1,40 +1,73 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+const risultato_schermo = ref("");
+const risultato_reale = ref(0);
+
+function nuovo_input(input: number | string) {
+  risultato_schermo.value += input;
+}
+
+function clear() {
+  risultato_schermo.value = "";
+}
+
+function clear_last() {
+  risultato_schermo.value = risultato_schermo.value.substring(
+    0,
+    risultato_schermo.value.length - 1
+  );
+}
+
+function elaborate_result() {
+  try {
+    eval(risultato_schermo.value);
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      alert("Sintassi sbagliata!");
+    }
+  }
+
+  risultato_reale.value = eval(risultato_schermo.value);
+  alert(risultato_reale.value);
+  risultato_schermo.value = "";
+}
+</script>
 
 <template>
   <div class="global">
     <div class="calc">
       <div class="upper-box">
-        <div class="result">0</div>
+        <div class="result">{{ risultato_schermo }}</div>
       </div>
       <div class="lower-box">
         <div class="calc-row">
-          <div class="grey-op">AC</div>
-          <div class="grey-op">C</div>
-          <div class="grey-op">%</div>
-          <div class="orange-op">/</div>
+          <div class="grey-op" @click="clear_last()">AC</div>
+          <div class="grey-op" @click="clear()">C</div>
+          <div class="grey-op" @click="nuovo_input('%')">%</div>
+          <div class="orange-op" @click="nuovo_input('/')">/</div>
         </div>
         <div class="calc-row">
-          <div class="numbers">7</div>
-          <div class="numbers">8</div>
-          <div class="numbers">9</div>
-          <div class="orange-op">x</div>
+          <div class="numbers" @click="nuovo_input(7)">7</div>
+          <div class="numbers" @click="nuovo_input(8)">8</div>
+          <div class="numbers" @click="nuovo_input(9)">9</div>
+          <div class="orange-op" @click="nuovo_input('*')">*</div>
         </div>
         <div class="calc-row">
-          <div class="numbers">4</div>
-          <div class="numbers">5</div>
-          <div class="numbers">6</div>
-          <div class="orange-op">-</div>
+          <div class="numbers" @click="nuovo_input(4)">4</div>
+          <div class="numbers" @click="nuovo_input(5)">5</div>
+          <div class="numbers" @click="nuovo_input(6)">6</div>
+          <div class="orange-op" @click="nuovo_input('-')">-</div>
         </div>
         <div class="calc-row">
-          <div class="numbers">1</div>
-          <div class="numbers">2</div>
-          <div class="numbers">3</div>
-          <div class="orange-op">+</div>
+          <div class="numbers" @click="nuovo_input(1)">1</div>
+          <div class="numbers" @click="nuovo_input(2)">2</div>
+          <div class="numbers" @click="nuovo_input(3)">3</div>
+          <div class="orange-op" @click="nuovo_input('+')">+</div>
         </div>
         <div class="calc-row">
-          <div class="numbers" id="zero">0</div>
-          <div class="numbers">,</div>
-          <div class="orange-op">=</div>
+          <div class="numbers" id="zero" @click="nuovo_input(0)">0</div>
+          <div class="numbers" @click="nuovo_input(',')">,</div>
+          <div class="orange-op" @click="elaborate_result()">=</div>
         </div>
       </div>
     </div>
